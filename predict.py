@@ -44,7 +44,7 @@ class Predictor(BasePredictor):
         # Download weights - comment out to use ollama to donwload the weights
         print("Downloading weights")
         if not os.path.exists(MODEL_CACHE):
-            download_weights(MODEL_URL, '.')
+            download_weights(MODEL_URL, MODEL_CACHE)
 
         # Start server
         print("Starting ollama server")
@@ -79,8 +79,6 @@ class Predictor(BasePredictor):
             "Content-Type": "application/json"
         }
         
-        start_time = time.time()
-        
         with requests.post(
             OLLAMA_GENERATE,
             headers=headers,
@@ -96,7 +94,3 @@ class Predictor(BasePredictor):
                             yield chunk['response']
                     except json.JSONDecodeError:
                         print("Failed to parse response chunk as JSON")
-        
-        end_time = time.time()
-        total_time = end_time - start_time
-        print("Total runtime:", total_time)
