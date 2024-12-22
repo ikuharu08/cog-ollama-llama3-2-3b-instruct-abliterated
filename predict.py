@@ -8,7 +8,7 @@ import requests
 import subprocess
 from cog import BasePredictor, Input, ConcatenateIterator
 
-MODEL_NAME = "huihui-ai/Llama-3.2-3B-Instruct-abliterated"
+MODEL_NAME = "huihui_ai/llama3.2-abliterate"
 OLLAMA_API = "http://127.0.0.1:11434"
 OLLAMA_GENERATE = OLLAMA_API + "/api/generate"
 MODEL_CACHE = "checkpoints"
