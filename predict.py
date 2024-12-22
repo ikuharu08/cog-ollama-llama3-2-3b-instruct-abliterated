@@ -50,13 +50,11 @@ def pull_model(model_name):
 class Predictor(BasePredictor):
     def setup(self):
         """Setup necessary resources for predictions"""
-        # Pull the model
-        pull_model(MODEL_NAME)
-
         # Start server
         print("Starting ollama server")
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
+        # Pull the model
+        pull_model(MODEL_NAME)
         # Wait for the server to start
         if not wait_for_ollama():
             raise RuntimeError("Failed to start Ollama server")
