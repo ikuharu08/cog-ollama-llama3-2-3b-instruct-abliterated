@@ -8,19 +8,10 @@ import requests
 import subprocess
 from cog import BasePredictor, Input, ConcatenateIterator
 
-MODEL_NAME = "llama3.3:70b"
+MODEL_NAME = "huihui-ai/Llama-3.2-3B-Instruct-abliterated"
 OLLAMA_API = "http://127.0.0.1:11434"
 OLLAMA_GENERATE = OLLAMA_API + "/api/generate"
-MODEL_CACHE = "checkpoints"
-MODEL_URL = "https://weights.replicate.delivery/default/ollama/llama3.3/70b.tar"
 
-def download_weights(url, dest):
-    start = time.time()
-    print("downloading url: ", url)
-    print("downloading to: ", dest)
-    subprocess.check_call(["pget", "-xf", url, dest], close_fds=False)
-    print("downloading took: ", time.time() - start)
-    
 def wait_for_ollama(timeout=60):
     start_time = time.time()
     while time.time() - start_time < timeout:
@@ -35,16 +26,32 @@ def wait_for_ollama(timeout=60):
     print("Timeout waiting for Ollama server")
     return False
 
+def pull_model(model_name):
+    """Pull the model using ollama pull and print real-time output"""
+    print(f"Pulling model: {model_name}")
+    process = subprocess.Popen(
+        ["ollama", "pull", model_name],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+
+    while True:
+        output = process.stdout.readline()
+        if output == "" and process.poll() is not None:
+            break
+        if output:
+            print(output.strip())
+    
+    err = process.stderr.read().strip()
+    if err:
+        print(f"Error during model pull: {err}")
+
 class Predictor(BasePredictor):
     def setup(self):
         """Setup necessary resources for predictions"""
-        # set environment variable OLLAMA_MODELS to 'checkpoints'
-        os.environ["OLLAMA_MODELS"] = MODEL_CACHE
-
-        # Download weights - comment out to use ollama to donwload the weights
-        print("Downloading weights")
-        if not os.path.exists(MODEL_CACHE):
-            download_weights(MODEL_URL, MODEL_CACHE)
+        # Pull the model
+        pull_model(MODEL_NAME)
 
         # Start server
         print("Starting ollama server")
