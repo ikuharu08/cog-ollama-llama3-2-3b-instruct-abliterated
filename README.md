@@ -1,6 +1,6 @@
-# Ollama Cog Model - llama3.3:70b
+# Ollama Cog Model - Llama-3.2-3B-Instruct-abliterated
 
-This is an implementation of the Ollama model [llama3.3:70b](https://ollama.com/library/llama3.3:70b) as a [Cog](https://github.com/replicate/cog) model.
+This is an implementation of the Ollama model [Llama-3.2-3B-Instruct-abliterated]([https://ollama.com/library/Llama-3.2-3B-Instruct-abliterated](https://ollama.com/huihui_ai/llama3.2-abliterate)) as a [Cog](https://github.com/replicate/cog) model.
 
 ## Development
 
