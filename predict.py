@@ -9,7 +9,7 @@ import subprocess
 from cog import BasePredictor, Input, ConcatenateIterator
 
 MODEL_NAME = "huihui_ai/llama3.2-abliterate"
-OLLAMA_API = "http://127.0.0.1:11434"
+OLLAMA_API = "http://127.0.0.1:24087"
 OLLAMA_GENERATE = OLLAMA_API + "/api/generate"
 
 def wait_for_ollama(timeout=60):
@@ -32,7 +32,7 @@ class Predictor(BasePredictor):
 
         # Start server
         print("Starting ollama server")
-        subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        subprocess.Popen(["OLLAMA_HOST=127.0.0.1:24087", "ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         # Wait for the server to start
         if not wait_for_ollama():
