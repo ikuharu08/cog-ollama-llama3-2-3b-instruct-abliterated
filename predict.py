@@ -11,6 +11,7 @@ from cog import BasePredictor, Input, ConcatenateIterator
 MODEL_NAME = "huihui-ai/Llama-3.2-3B-Instruct-abliterated"
 OLLAMA_API = "http://127.0.0.1:11434"
 OLLAMA_GENERATE = OLLAMA_API + "/api/generate"
+MODEL_CACHE = "checkpoints"
 
 def wait_for_ollama(timeout=60):
     start_time = time.time()
@@ -26,35 +27,16 @@ def wait_for_ollama(timeout=60):
     print("Timeout waiting for Ollama server")
     return False
 
-def pull_model(model_name):
-    """Pull the model using ollama pull and print real-time output"""
-    print(f"Pulling model: {model_name}")
-    process = subprocess.Popen(
-        ["ollama", "pull", model_name],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True
-    )
-
-    while True:
-        output = process.stdout.readline()
-        if output == "" and process.poll() is not None:
-            break
-        if output:
-            print(output.strip())
-    
-    err = process.stderr.read().strip()
-    if err:
-        print(f"Error during model pull: {err}")
-
 class Predictor(BasePredictor):
     def setup(self):
         """Setup necessary resources for predictions"""
+        # set environment variable OLLAMA_MODELS to 'checkpoints'
+        os.environ["OLLAMA_MODELS"] = MODEL_CACHE
+
         # Start server
         print("Starting ollama server")
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # Pull the model
-        pull_model(MODEL_NAME)
+
         # Wait for the server to start
         if not wait_for_ollama():
             raise RuntimeError("Failed to start Ollama server")
